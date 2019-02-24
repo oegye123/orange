@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="js/vuejs-2.6.6.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+<body>
+<div id="app">
+    {{message + 1 + '元'}}
+    <input type="button" value="提交" @click="fun('10')">
+
+    <input type="text" @keydown="keydown($event)">
+
+    <div @mouseover="fun1()" style="background: #2fd5ff ;width: 100%">
+        <input type="text" @keydown.enter="fun3()" @mouseover="fun2($event)">
+    </div>
+    <form @submit.prevent action="http://www.baidu.com">
+        <input type="submit" value="提交">
+    </form>
+    <a @click.prevent href="http://www.baidu.com">百度</a>
+    <input type="button" value="修改标签属性" @click="fun4()">
+    <div v-html="dataMsg"></div>
+    <DIV>----</DIV>
+    账号:<input type="text" v-model="user.username">
+    密码:<input type="text" v-model="user.password">
+    <input type="button" @click="fun5()" value="修改json数据">
+    <ul>
+        <li v-for="(value,index) in arr">{{value}}----{{index}}</li>
+    </ul>
+    <ul>
+        <li v-for="(v,i) in list">{{v.name}}--{{v.age}}----{{i}}</li>
+    </ul>
+
+    <table border="1">
+        <tr>
+            <td>
+                姓名
+            </td>
+            <td>
+                年龄
+            </td>
+        </tr>
+
+        <tr v-for="(v,i) in list">
+            <td>{{v.name}}</td>
+            <td>{{v.age}}</td>
+        </tr>
+    </table>
+
+</div>
+
+
+</body>
+
+
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            arr: [0, 1, 2, 3, 4, 5],
+            list: [{name: "小红", age: 18}, {name: "小白", age: 20}],
+
+            user: {
+                username: "admin",
+                password: "123"
+            },
+            message: 10,
+            message1: "你好啊",
+            dataMsg: ""
+        },
+        methods: {
+            fun: function (obj) {
+                this.message = obj;
+            }
+            ,
+            keydown: function (key) {
+                var keyCode = key.keyCode;
+                if (!(keyCode >= 48 && keyCode <= 57)) {
+                    key.preventDefault();
+                }
+
+            }
+            ,
+            fun1: function () {
+                alert("div区域")
+            }
+            ,
+            fun2: function (obj) {
+                alert("输入框区域")
+                obj.stopPropagation();
+            }
+            ,
+            fun3: function () {
+                alert("按了回车键")
+            },
+            fun4: function (obj) {
+                this.dataMsg = '<div style=\'background-color: green\'>1111</div>';
+            },
+            fun5: function () {
+                this.user.username = "admin123"
+                this.user.password = "123";
+            },
+            init: function () {
+                axios.get("./data/user.json").then(function (response) {
+                    alert(response);
+                    alert(JSON.stringify(response));
+                    alert(response.data[0].username);
+
+                })
+            }
+        },
+        //载入初始化钩子
+        created: function () {
+            this.init();
+        }
+
+    });
+
+</script>
+
+</html>
